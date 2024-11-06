@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items:center;
+            min-height: 100vh;
+            background-color:lightblue;
+        }
+        .container{
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap:30px;
+            background-color:lightskyblue;
+            padding: 40px 60px;
+        }
+        h2{
+            font-size: 3em;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .reset{
+            padding: 15px 20px;
+            color: lightblue;
+            background: #fff;
+            border: none;
+            font-size: 1.5em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .reset:focus{
+            color: #fff;
+            background-color: lightblue;
+        }
+        .game{
+            width: 440px;
+            height: 440px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            transform-style:preserve-3d;
+            perspective:500px;
+        }
+        .item{
+            position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            background:#fff;
+            transform: rotateY(180deg);
+            transition: 0.25s;
+        }
+        .item.boxOpen{
+            transform: rotateY(0deg);
+        }
+        .item::after{
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color:paleturquoise;
+            transition: 0.25s;
+            transform: rotateY(0deg);
+            backface-visibility: hidden;
+        }
+        .boxOpen:after,.boxMatch:after{
+            transform: rotateY(180deg);
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>MEMORY GAME</h2>
+        <div class="game"></div>
+        <button class="reset" onclick="window.location.reload();">RESET GAME</button>
+    </div>
+</body>
+<script>
+    const emojis=["😍","😍","😎","😎","😂","😂","🥴","🥴","😇","😇","❤️","❤️","🤯","🤯","🥵","🥵"];
+    var change_emojis=emojis.sort(()=>(Math.random()>.5)?2:-1);
+    for(var i=0;i<emojis.length;i++){
+        let box=document.createElement('div')
+        box.className='item';
+        box.innerHTML=change_emojis[i]
+
+        box.onclick=function(){
+            this.classList.add('boxOpen')
+            setTimeout(function(){
+                if(document.querySelectorAll('.boxOpen').length>1){
+                    if(document.querySelectorAll('.boxOpen')[0].innerHTML==
+                        document.querySelectorAll('.boxOpen')[1].innerHTML){
+                        document.querySelectorAll('.boxOpen')[0].classList.add('boxMatch')
+                        document.querySelectorAll('.boxOpen')[1].classList.add('boxMatch')
+                        document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                        document.querySelectorAll('.boxOpen')[0].classList.add('boxOpen')
+
+                        if(document.querySelectorAll('.boxMatch').length==emojis.length){
+                            alert('win')
+                        }
+                    }else{
+                        document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                        document.querySelectorAll('.boxOpen')[0].classList.remove('boxOpen')
+                    }
+                }
+
+            },500)
+        }
+        document.querySelector('.game').appendChild(box);
+    }
+
+</script>
+</html>
